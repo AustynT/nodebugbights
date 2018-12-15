@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const UserScema = new Scema({
+const UserScema = new Schema({
   email: {
     type: String,
     required: [true, "email is required"]
