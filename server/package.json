@@ -8,7 +8,8 @@
     "npm": "5.0.3"
   },
   "scripts": {
-    "node": "node index.js"
+    "node": "node index.js",
+    "server": "nodemon index.js"
   },
   "author": "Austyn Travis <Austyntravis9@gmail.com> (http://austyntravis.com)",
   "license": "MIT",

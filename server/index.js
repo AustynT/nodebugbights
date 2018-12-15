@@ -1,4 +1,10 @@
 const express = require("express");
+const mongoose = mongoose;
+const bodyParser = require("body-parser");
+
+mongoose.Promise = global.Promise;
+mongoose.connect("mongodb://localhost/bugbites");
+
 const app = express();
 
 app.get("/", (req, res) => {});
