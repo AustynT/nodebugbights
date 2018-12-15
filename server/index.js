@@ -1,5 +1,5 @@
 const express = require("express");
-const mongoose = mongoose;
+const mongoose = require(mongoose);
 const bodyParser = require("body-parser");
 
 mongoose.Promise = global.Promise;
