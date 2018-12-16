@@ -2,11 +2,13 @@ const mongoose = require("mongoose");
 const BlogPost = mongoose.model("blogPost");
 
 module.exports = app => {
-  app.post("/blogs", async (req, res, next) => {
+  app.post("/blogs/new", async (req, res) => {
     const blogProps = req.body;
-    console.log(blogProps);
-    BlogPost.create(blogProps)
-      .then(blog => res.send(blog))
-      .catch(next);
+    BlogPost.create(blogProps).then(blog => res.send(blog));
+  });
+
+  app.get("/blogs", async (req, res, next) => {
+    const blogProps = req.body;
+    BlogPost.findOne(blogProps).then(blog => res.send(blog));
   });
 };
