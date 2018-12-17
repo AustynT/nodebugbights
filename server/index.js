@@ -1,40 +1,42 @@
 require("./models/BlogPost");
 require("./models/User");
+require("./services/passport");
+
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const keys = require("./config/keys");
-const app = express();
+const cookieSession = require("cookie-session");
+const passport = require("passport");
+const bodyParser = require("body-parser");
 
 mongoose.connect("mongodb://localhost/bugbites");
+const app = express();
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: keys.googleClientID,
-      clientSecret: keys.googleClientSecret,
-      callbackURL: "/auth/google/callback"
-    },
-    (accessToken, refreshToken, profile, done) => {
-      console.log(accessToken);
-    }
-  )
-);
+app.use(bodyParser.json());
 
-app.get(
-  "/auth/google",
-  passport.authenticate("google", {
-    scope: ["profile", "email"]
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: [keys.cookieKey]
   })
 );
-app.get("/auth/google/callback", passport.authenticate("google"));
-app.use(bodyParser.json());
+
 app.get("/", (req, res) => {
   res.send({ hi: "there" });
 });
 
+app.use(function(req, res, next) {
+  if (req.originalUrl && req.originalUrl.split("/").pop() === "favicon.ico") {
+    return res.sendStatus(204);
+  }
+
+  return next();
+});
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+require("./routes/authRoutes")(app);
 require("./routes/blogRoutes")(app);
 
 const PORT = process.env.PORT || 5000;
